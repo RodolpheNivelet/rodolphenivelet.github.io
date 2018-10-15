@@ -46260,7 +46260,9 @@ class HexagonService {
       __WEBPACK_IMPORTED_MODULE_2__pages__["a" /* default */].loadPage(target.link);
     }
 
-    this.animateAllFrom(target.hexagon, 200, this.flipped ? 'FlipBack': 'Flip', true);
+    const afterAnim = target.link === 'home' ? hex => {hex.cleanBack()} : undefined;
+
+    this.animateAllFrom(target.hexagon, 200, this.flipped ? 'FlipBack': 'Flip', true, afterAnim);
     this.flipped = !this.flipped;
   }
 
@@ -46324,6 +46326,7 @@ class HexagonService {
         previous.backCap.link = 'home';
         previous.backCap.addIcon(__WEBPACK_IMPORTED_MODULE_4__fortawesome_fontawesome_pro_light__["a" /* faArrowAltLeft */]);
         previous.backCap.addText('Back to home');
+        previous.noBackClean = true;
     	},
 
     	// onProgress callback currently not supported
@@ -46334,6 +46337,12 @@ class HexagonService {
     		console.error( 'An error happened.' );
     	}
     );
+  }
+
+  cleanAllBack() {
+    for (let hexagon of this.hexagons) {
+      hexagon.cleanBack();
+    }
   }
 
 }
@@ -53779,11 +53788,14 @@ class App {
     __WEBPACK_IMPORTED_MODULE_2__services_hexagon_js__["a" /* default */].appendGrid(100, 15, this.scene);
 
     const middleHex = __WEBPACK_IMPORTED_MODULE_2__services_hexagon_js__["a" /* default */].get(0, 0);
-    __WEBPACK_IMPORTED_MODULE_2__services_hexagon_js__["a" /* default */].animateAllFrom(middleHex, 200, 'Bounce', false, hex => {
-      __WEBPACK_IMPORTED_MODULE_2__services_hexagon_js__["a" /* default */].randomAnimation(hex);
-    });
 
     this.canvas.addEventListener( 'mousedown', event => {self.onClick(event);}, false );
+
+    setTimeout(() => {
+      __WEBPACK_IMPORTED_MODULE_2__services_hexagon_js__["a" /* default */].animateAllFrom(middleHex, 200, 'Bounce', false, hex => {
+        __WEBPACK_IMPORTED_MODULE_2__services_hexagon_js__["a" /* default */].randomAnimation(hex);
+      });
+    }, 1000);
 
   }
 
@@ -53994,6 +54006,12 @@ const createGeomFrom3dMesh = __WEBPACK_IMPORTED_MODULE_6_three_simplicial_comple
     });
   }
 
+  cleanBack() {
+    if (!this.noBackClean) {
+      this.backCap.clean();
+    }
+  }
+
 });
 
 
@@ -54132,6 +54150,18 @@ const createGeomFrom3dMesh = __WEBPACK_IMPORTED_MODULE_5_three_simplicial_comple
       const scaleVal = this.hover ? 2 : 0;
       const scale = new __WEBPACK_IMPORTED_MODULE_0_three__["Vector3"](scaleVal, scaleVal, scaleVal);
       __WEBPACK_IMPORTED_MODULE_2__services_transition__["a" /* default */].smoothTo(this.text, 'scale', scale, delta);
+    }
+  }
+
+  clean() {
+    if (this.icon) {
+      this.wrapper.remove(this.icon);
+      delete this.icon;
+    }
+
+    if (this.text) {
+      this.wrapper.remove(this.text);
+      delete this.text;
     }
   }
 });
