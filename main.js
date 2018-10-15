@@ -53785,7 +53785,7 @@ class App {
 
     this.scene.add( this.ambientLight );
 
-    __WEBPACK_IMPORTED_MODULE_2__services_hexagon_js__["a" /* default */].appendGrid(100, 15, this.scene);
+    __WEBPACK_IMPORTED_MODULE_2__services_hexagon_js__["a" /* default */].appendGrid(30, 10, this.scene);
 
     const middleHex = __WEBPACK_IMPORTED_MODULE_2__services_hexagon_js__["a" /* default */].get(0, 0);
 
